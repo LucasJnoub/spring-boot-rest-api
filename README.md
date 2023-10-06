@@ -115,9 +115,11 @@ Siga as seguintes etapas para configurar e executar o projeto em sua máquina:
  git clone https://github.com/LucasJnoub/spring-boot-rest-api.git
 2. Entre no diretório de projeto:
  cd .\spring-boot-rest-api\
-3. Execute o seguinte comando:
+3. Compile o código:
+mvn clean package -DskipTests
+5. Execute o seguinte comando:
 java -jar target/J-api.jar
-4. Por fim entre nesse link:
+6. Por fim entre nesse link:
 http://localhost:8080/swagger-ui.html
 
 
