@@ -15,7 +15,7 @@ RUN ./mvnw clean package -DskipTests
 FROM openjdk:17.0.1-jdk-slim
 
 # Copie o arquivo JAR compilado da etapa anterior
-COPY --from=build /Java-Restful-Api/target/Java-Restful-Api.jar /.Java-Restful-Api-0.0.1-SNAPSHOT.jar
+COPY --from=build /Java-Restful-Api/target/Java-Restful-Api-0.0.1-SNAPSHOT.jar /app.jar
 
 # Exponha a porta em que a aplicação será executada
 EXPOSE 8080
