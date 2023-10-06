@@ -92,6 +92,13 @@ spring.datasource.username=seu-usuario
 spring.datasource.password=sua-senha
 
 
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+server.tomcat.acceslog.enabled=true
+
+
   ```
 ### Como Executar
 
@@ -102,9 +109,9 @@ Siga as seguintes etapas para configurar e executar o projeto em sua máquina:
 2. Entre no diretório de projeto:
  cd .\spring-boot-rest-api\
 3. Execute o seguinte comando:
-java -jar target/seu-projeto-0.0.1-SNAPSHOT.jar
+java -jar target/J-api.jar
 4. Por fim entre nesse link:
-https://spring-boot-rest-api-7el0.onrender.com/swagger-ui/index.htm
+http://localhost:8080/swagger-ui.html
 
 
 
