@@ -1,0 +1,8 @@
+services:
+  - name: sua-aplicacao
+    env:
+      SPRING_DATASOURCE_URL: ${url}
+      SPRING_DATASOURCE_USERNAME: ${Username}
+      SPRING_DATASOURCE_PASSWORD: ${Password}
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/Java-Restful-Api-0.0.1-SNAPSHOT.jar
