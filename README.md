@@ -41,7 +41,14 @@ classDiagram
 
 Este é um projeto de exemplo de API RESTful desenvolvido em Spring Boot. A API realiza as seguintes operações:
 
-- [Liste aqui as principais funcionalidades da sua API.]
+1. Inserir usuário.
+2. Atualizar usuário.
+3. Mostrar usuários
+4. Remover usuário.
+
+## EndPoints
+![image](https://github.com/LucasJnoub/spring-boot-rest-api/assets/122225478/64027eb7-d714-4dc6-99e8-df3264d9f9b2)
+
 
 ## Acessando a API
 
