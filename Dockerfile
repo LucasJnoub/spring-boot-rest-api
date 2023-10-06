@@ -9,7 +9,7 @@ COPY . .
 RUN ./mvnw clean package -DskipTests
 
 # Segunda etapa: crie uma imagem menor e copie o arquivo JAR compilado para ela
-FROM openjdk:17-jre-slim
+FROM openjdk:17.0.1-jdk-slim
 
 # Copie o arquivo JAR compilado da etapa anterior
 COPY --from=build /Java-Restful-Api/target/Java-Restful-Api.jar /app.jar
