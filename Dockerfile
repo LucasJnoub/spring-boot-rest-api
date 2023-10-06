@@ -5,6 +5,9 @@ FROM openjdk:17-jdk-slim AS build
 WORKDIR /app
 COPY . .
 
+# Dê permissão de execução ao arquivo mvnw
+RUN chmod +x mvnw
+
 # Execute o Maven para construir o projeto (você pode personalizar isso conforme necessário)
 RUN ./mvnw clean package -DskipTests
 
