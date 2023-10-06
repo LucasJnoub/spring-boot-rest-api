@@ -7,7 +7,7 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
 
-COPY --from=build /Java-Restful-Api/target/Java-Restful-Api-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /target/J-api.jar app.jar
 
 EXPOSE 8080
 
