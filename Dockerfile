@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 # Execute o Maven para construir o projeto (você pode personalizar isso conforme necessário)
-RUN ./mvnw clean package -DskipTests
+RUN ./mvn clean package -DskipTests
 
 # Segunda etapa: crie uma imagem menor e copie o arquivo JAR compilado para ela
 FROM openjdk:17.0.1-jdk-slim
