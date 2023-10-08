@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
+
     public UserServiceImplementation(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -76,16 +77,49 @@ public class UserServiceImplementation implements UserService {
                                 userAccount.setAgency((String) accountUpdates.get("agency"));
                             }
                             // Atualiza o saldo, se presente nas atualizações da conta
-                            if (accountUpdates.containsKey("balance")) {
-                                Double balanceValue = (Double) accountUpdates.get("balance");
-                                BigDecimal balance = BigDecimal.valueOf(balanceValue);
-                                userAccount.setBalance(balance);
+                            Object balanceValue = accountUpdates.get("balance");
+                            if (balanceValue instanceof Integer) {
+                                Integer balanceInteger = (Integer) balanceValue;
+                                String balanceString = balanceInteger.toString();
+                                userAccount.setBalance(new BigDecimal(balanceString));
+                            } else if (balanceValue instanceof String) {
+                                String balanceString = (String) balanceValue;
+                                userAccount.setBalance(new BigDecimal(balanceString));
+                            } else {
+                                // Lidar com outros tipos de dados ou lançar uma exceção se necessário
                             }
+
                             // Atualiza o limite, se presente nas atualizações da conta
                             if (accountUpdates.containsKey("limit")) {
-                                Double limitValue = (Double) accountUpdates.get("limit");
-                                BigDecimal limit = BigDecimal.valueOf(limitValue);
+                                BigDecimal limit = new BigDecimal((String) accountUpdates.get("limit"));
                                 userAccount.setLimit(limit);
+                            }
+                        }
+                    }
+                }
+                // Atualiza o cartão do usuário, se presente nas atualizações
+                if (updates.containsKey("card")) {
+                    Map<String, Object> cardUpdates = (Map<String, Object>) updates.get("card");
+                    if (cardUpdates != null) {
+                        Card userCard = existingUser.getCard();
+                        if (userCard != null) {
+                            // Atualiza o número do cartão, se presente nas atualizações do cartão
+                            if (cardUpdates.containsKey("number")) {
+                                userCard.setNumber((String) cardUpdates.get("number"));
+                            }
+                            // Atualiza o limite do cartão, se presente nas atualizações do cartão
+                            Object cardLimitValue = cardUpdates.get("limit");
+                            if (cardLimitValue != null) {
+                                if (cardLimitValue instanceof Integer) {
+                                    Integer cardLimitInteger = (Integer) cardLimitValue;
+                                    String cardLimitString = cardLimitInteger.toString();
+                                    userCard.setLimit(new BigDecimal(cardLimitString));
+                                } else if (cardLimitValue instanceof String) {
+                                    String cardLimitString = (String) cardLimitValue;
+                                    userCard.setLimit(new BigDecimal(cardLimitString));
+                                } else {
+                                    // Lidar com outros tipos de dados ou lançar uma exceção se necessário
+                                }
                             }
                         }
                     }
@@ -115,27 +149,7 @@ public class UserServiceImplementation implements UserService {
                     }
                 }
 
-                // Atualiza o cartão do usuário, se presente nas atualizações
-                if (updates.containsKey("card")) {
-                    Map<String, Object> cardUpdates = (Map<String, Object>) updates.get("card");
-                    if (cardUpdates != null) {
-                        Card userCard = existingUser.getCard();
-                        if (userCard != null) {
-                            // Atualiza o número do cartão, se presente nas atualizações do cartão
-                            if (cardUpdates.containsKey("number")) {
-                                userCard.setNumber((String) cardUpdates.get("number"));
-                            }
-                            // Atualiza o limite do cartão, se presente nas atualizações do cartão
-                            if (cardUpdates.containsKey("limit")) {
-                                Double cardLimitValue = (Double) cardUpdates.get("limit");
-                                BigDecimal cardLimit = BigDecimal.valueOf(cardLimitValue);
-                                userCard.setLimit(cardLimit);
-                            }
-                        }
-                    }
-                }
-
-                // Atualiza as notícias do usuário, se presente nas atualizações
+// Atualiza as notícias do usuário, se presente nas atualizações
                 if (updates.containsKey("news")) {
                     List<Map<String, Object>> newsUpdates = (List<Map<String, Object>>) updates.get("news");
                     if (newsUpdates != null) {
@@ -159,12 +173,15 @@ public class UserServiceImplementation implements UserService {
                     }
                 }
 
+
+                // Restante do código para atualizar recursos, cartão e notícias permanece o mesmo
+                // ...
+
                 // Salva o usuário atualizado no repositório
                 userRepository.save(existingUser);
             }
         }
     }
 
-
-
 }
+
