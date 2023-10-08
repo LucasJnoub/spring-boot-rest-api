@@ -25,10 +25,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity<String> handleUnexpectedException(Throwable businessException) {
-        var message = "UNEXPECTED SERVER ERROR, CHECK LOGS.";
-        logger.error(message, UnexpectedException.class);
-        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<String> handleUnexpectedException(Throwable exception) {
+        // Log a mensagem de erro e a pilha de chamadas
+        logger.error("Erro inesperado no servidor:", exception);
+
+        // Montar uma mensagem de erro personalizada com detalhes da exceção
+        String errorMessage = "Ocorreu um erro inesperado no servidor. Detalhes: " + exception.getMessage();
+
+        // Retornar a mensagem de erro e um código de status HTTP apropriado
+        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
