@@ -109,48 +109,6 @@ public class UserServiceImplementation implements UserService {
                     }
                 }
 
-                if (updates.containsKey("features")) {
-                    List<Map<String, Object>> featureUpdates = (List<Map<String, Object>>) updates.get("features");
-                    if (featureUpdates != null && !featureUpdates.isEmpty()) {
-                        List<Feature> userFeatures = existingUser.getFeatures();
-                        if (userFeatures != null && !userFeatures.isEmpty()) {
-                            for (int index = 0; index < userFeatures.size() && index < featureUpdates.size(); index++) {
-                                Feature currentFeature = userFeatures.get(index);
-                                Map<String, Object> currentUpdate = featureUpdates.get(index);
-
-                                if (currentUpdate.containsKey("icon")) {
-                                    currentFeature.setIcon((String) currentUpdate.get("icon"));
-                                }
-
-                                if (currentUpdate.containsKey("description")) {
-                                    currentFeature.setDescription((String) currentUpdate.get("description"));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (updates.containsKey("news")) {
-                    List<Map<String, Object>> newsUpdates = (List<Map<String, Object>>) updates.get("news");
-                    if (newsUpdates != null) {
-                        List<News> userNews = existingUser.getNews();
-                        if (userNews != null) {
-                            for (int index = 0; index < userNews.size() && index < newsUpdates.size(); index++) {
-                                News currentNews = userNews.get(index);
-                                Map<String, Object> currentUpdate = newsUpdates.get(index);
-
-                                if (currentUpdate.containsKey("icon")) {
-                                    currentNews.setIcon((String) currentUpdate.get("icon"));
-                                }
-
-                                if (currentUpdate.containsKey("description")) {
-                                    currentNews.setDescription((String) currentUpdate.get("description"));
-                                }
-                            }
-                        }
-                    }
-                }
-
                 userRepository.save(existingUser);
             }
         }

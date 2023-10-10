@@ -13,14 +13,9 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Feature> features;
-
     @OneToOne(cascade = CascadeType.ALL)
     private Card card;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<News> news;
+
 
     public String getName() {
         return name;
@@ -38,13 +33,7 @@ public class User {
         this.account = account;
     }
 
-    public List<Feature> getFeatures() {
-        return features;
-    }
 
-    public void setFeatures(List<Feature> features) {
-        this.features = features;
-    }
 
     public Card getCard() {
         return card;
@@ -54,13 +43,7 @@ public class User {
         this.card = card;
     }
 
-    public List<News> getNews() {
-        return news;
-    }
 
-    public void setNews(List<News> news) {
-        this.news = news;
-    }
     public Long getId() {
         return id;
     }
