@@ -1,15 +1,10 @@
 package restful.api.main.service.implementation;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import restful.api.main.domain.model.*;
 import restful.api.main.domain.repository.UserRepository;
 import restful.api.main.service.UserService;
-
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -52,31 +47,27 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public void partialUserUpdate(Long id, Map<String, Object> updates) {
-        User existingUser = userRepository.findById(id).orElse(null);
+        User existingUser = userRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("User not found with id: " + id)
+        );
 
         if (existingUser != null) {
-            // Verifica se o mapa de atualizações não está vazio
             if (!updates.isEmpty()) {
-                // Atualiza o nome do usuário, se presente nas atualizações
                 if (updates.containsKey("name")) {
                     existingUser.setName((String) updates.get("name"));
                 }
 
-                // Atualiza a conta do usuário, se presente nas atualizações
                 if (updates.containsKey("account")) {
                     Map<String, Object> accountUpdates = (Map<String, Object>) updates.get("account");
                     if (accountUpdates != null) {
                         Account userAccount = existingUser.getAccount();
                         if (userAccount != null) {
-                            // Atualiza o número da conta, se presente nas atualizações da conta
                             if (accountUpdates.containsKey("number")) {
                                 userAccount.setNumber((String) accountUpdates.get("number"));
                             }
-                            // Atualiza a agência, se presente nas atualizações da conta
                             if (accountUpdates.containsKey("agency")) {
                                 userAccount.setAgency((String) accountUpdates.get("agency"));
                             }
-                            // Atualiza o saldo, se presente nas atualizações da conta
                             Object balanceValue = accountUpdates.get("balance");
                             if (balanceValue instanceof Integer) {
                                 Integer balanceInteger = (Integer) balanceValue;
@@ -85,11 +76,8 @@ public class UserServiceImplementation implements UserService {
                             } else if (balanceValue instanceof String) {
                                 String balanceString = (String) balanceValue;
                                 userAccount.setBalance(new BigDecimal(balanceString));
-                            } else {
-                                // Lidar com outros tipos de dados ou lançar uma exceção se necessário
                             }
 
-                            // Atualiza o limite, se presente nas atualizações da conta
                             if (accountUpdates.containsKey("limit")) {
                                 BigDecimal limit = new BigDecimal((String) accountUpdates.get("limit"));
                                 userAccount.setLimit(limit);
@@ -97,17 +85,15 @@ public class UserServiceImplementation implements UserService {
                         }
                     }
                 }
-                // Atualiza o cartão do usuário, se presente nas atualizações
+
                 if (updates.containsKey("card")) {
                     Map<String, Object> cardUpdates = (Map<String, Object>) updates.get("card");
                     if (cardUpdates != null) {
                         Card userCard = existingUser.getCard();
                         if (userCard != null) {
-                            // Atualiza o número do cartão, se presente nas atualizações do cartão
                             if (cardUpdates.containsKey("number")) {
                                 userCard.setNumber((String) cardUpdates.get("number"));
                             }
-                            // Atualiza o limite do cartão, se presente nas atualizações do cartão
                             Object cardLimitValue = cardUpdates.get("limit");
                             if (cardLimitValue != null) {
                                 if (cardLimitValue instanceof Integer) {
@@ -117,71 +103,56 @@ public class UserServiceImplementation implements UserService {
                                 } else if (cardLimitValue instanceof String) {
                                     String cardLimitString = (String) cardLimitValue;
                                     userCard.setLimit(new BigDecimal(cardLimitString));
-                                } else {
-                                    // Lidar com outros tipos de dados ou lançar uma exceção se necessário
                                 }
                             }
                         }
                     }
                 }
 
-                // Atualiza os recursos do usuário, se presente nas atualizações
                 if (updates.containsKey("features")) {
                     List<Map<String, Object>> featureUpdates = (List<Map<String, Object>>) updates.get("features");
-                    if (featureUpdates != null) {
+                    if (featureUpdates != null && !featureUpdates.isEmpty()) {
                         List<Feature> userFeatures = existingUser.getFeatures();
-                        if (userFeatures != null) {
-                            // Limpa os recursos existentes para adicionar os atualizados
-                            userFeatures.clear();
-                            for (Map<String, Object> featureUpdate : featureUpdates) {
-                                Feature feature = new Feature();
-                                // Atualiza o ícone do recurso, se presente nas atualizações
-                                if (featureUpdate.containsKey("icon")) {
-                                    feature.setIcon((String) featureUpdate.get("icon"));
+                        if (userFeatures != null && !userFeatures.isEmpty()) {
+                            for (int index = 0; index < userFeatures.size() && index < featureUpdates.size(); index++) {
+                                Feature currentFeature = userFeatures.get(index);
+                                Map<String, Object> currentUpdate = featureUpdates.get(index);
+
+                                if (currentUpdate.containsKey("icon")) {
+                                    currentFeature.setIcon((String) currentUpdate.get("icon"));
                                 }
-                                // Atualiza a descrição do recurso, se presente nas atualizações
-                                if (featureUpdate.containsKey("description")) {
-                                    feature.setDescription((String) featureUpdate.get("description"));
+
+                                if (currentUpdate.containsKey("description")) {
+                                    currentFeature.setDescription((String) currentUpdate.get("description"));
                                 }
-                                userFeatures.add(feature);
                             }
                         }
                     }
                 }
 
-// Atualiza as notícias do usuário, se presente nas atualizações
                 if (updates.containsKey("news")) {
                     List<Map<String, Object>> newsUpdates = (List<Map<String, Object>>) updates.get("news");
                     if (newsUpdates != null) {
                         List<News> userNews = existingUser.getNews();
                         if (userNews != null) {
-                            // Limpa as notícias existentes para adicionar as atualizadas
-                            userNews.clear();
-                            for (Map<String, Object> newsUpdate : newsUpdates) {
-                                News news = new News();
-                                // Atualiza o ícone da notícia, se presente nas atualizações
-                                if (newsUpdate.containsKey("icon")) {
-                                    news.setIcon((String) newsUpdate.get("icon"));
+                            for (int index = 0; index < userNews.size() && index < newsUpdates.size(); index++) {
+                                News currentNews = userNews.get(index);
+                                Map<String, Object> currentUpdate = newsUpdates.get(index);
+
+                                if (currentUpdate.containsKey("icon")) {
+                                    currentNews.setIcon((String) currentUpdate.get("icon"));
                                 }
-                                // Atualiza a descrição da notícia, se presente nas atualizações
-                                if (newsUpdate.containsKey("description")) {
-                                    news.setDescription((String) newsUpdate.get("description"));
+
+                                if (currentUpdate.containsKey("description")) {
+                                    currentNews.setDescription((String) currentUpdate.get("description"));
                                 }
-                                userNews.add(news);
                             }
                         }
                     }
                 }
 
-
-                // Restante do código para atualizar recursos, cartão e notícias permanece o mesmo
-                // ...
-
-                // Salva o usuário atualizado no repositório
                 userRepository.save(existingUser);
             }
         }
     }
-
 }
-
